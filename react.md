@@ -1604,4 +1604,476 @@ service层：
     }
 ```
 
+## 13. 下拉填充
+
+先看效果，以发票维护为例:
+
+可以在浏览器上查看到请求路径：
+
+![image-20201029100208578](D:\sinosoft\1、NEWCOMP新人培训期相关资料\培训笔记\newCompStudy\static\picture\image-20201029100208578.png)
+
+点进去看response，可以看到响应的数据：
+
+![image-20201029100736920](D:\sinosoft\1、NEWCOMP新人培训期相关资料\培训笔记\newCompStudy\static\picture\image-20201029100736920.png)
+
+要做的效果：
+
+![image-20201029103601848](D:\sinosoft\1、NEWCOMP新人培训期相关资料\培训笔记\newCompStudy\static\picture\image-20201029103601848.png)
+
+前端：
+
+打开发票维护页面的时候，queryAdvance.js会初始化数据
+
+~~~queryAdvance.js
+componentDidMount() {
+    const { dispatch } = this.props;
+    // 初始化合作机构清单
+    dispatch({
+      type: 'codeselect/codequery',
+      queryPara: {
+        codeType: 'agentcom',
+      },
+    });
+    dispatch({
+      type: 'invoiceMaintenance/resetTable',
+      queryPara: {},
+    });
+  }
+~~~
+
+在models文件夹下的codeselect.js可以找到codeQuery方法
+
+![image-20201029100949419](D:\sinosoft\1、NEWCOMP新人培训期相关资料\培训笔记\newCompStudy\static\picture\image-20201029100949419.png)
+
+在renders方法里实现了codequerycallback()方法：
+
+~~~
+codequerycallback(state, action) {
+      switch (action.queryPara.codeType) {
+        case 'agentcom':
+          return { ...state, agentComData: action.payload || state.agentComData };
+        case 'managCom':
+          return { ...state, manageComData: action.payload || state.manageComData };
+        case 'agentcomYN':
+          return { ...state, agentComYNData: action.payload || state.agentComYNData };
+        case 'managecom':
+          return { ...state, orgSelectData: action.payload || state.orgSelectData };
+        case 'approveState':
+          return { ...state, approveStateData: action.payload || state.approveStateData };
+        case 'feetype':
+          return { ...state, feeType: action.payload || state.feeType };
+        case 'tcompact':
+          return { ...state, tCompatCodeData: action.payload || state.tCompatCodeData };
+        case 'compact':
+          return { ...state, compatCodeData: action.payload || state.compatCodeData };
+        case 'maincompact':
+          return { ...state, mCompatCodeData: action.payload || state.mCompatCodeData };
+        case 'bankcode':
+          return { ...state, bankCodeData: action.payload || state.bankCodeData };
+        case 'projectcode':
+          return { ...state, projectCodeData: action.payload || state.projectCodeData };
+        case 'riskcode':
+          return { ...state, riskCode: action.payload || state.riskCode };
+        case 'pkgriskcode':
+          return { ...state, productPlan: action.payload || state.productPlan };
+        case 'rprojectcode':
+          return { ...state, rProjectCodeData: action.payload || state.rProjectCodeData };
+        case 'payIntv':
+          return { ...state, payIntv: action.payload || state.payIntv };
+        case 'payYearsType':
+          return { ...state, payYearsType: action.payload || state.payYearsType };
+        case 'dateType':
+          return { ...state, dateType: action.payload || state.dateType };
+        case 'countType':
+          return { ...state, countType: action.payload || state.countType };
+        case 'paynumber':
+          return { ...state, payNo: action.payload || state.payNo };
+        case 'rvProjectcode':
+          return { ...state, rvProjectcode: action.payload || state.rvProjectcode };
+        case 'approveModifyState':
+          return {
+            ...state,
+            approveModifyStateData: action.payload || state.approveModifyStateData,
+          };
+        case 'scenceList':
+          return { ...state, scenceList: action.payload || state.scenceList };
+        case 'licenseeList':
+          return { ...state, licenseeList: action.payload || state.licenseeList };
+        case 'lposition':
+          return { ...state, lposition: action.payload || state.lposition };
+        case 'lposition2':
+          return { ...state, lposition2: action.payload || state.lposition2 };
+        case 'lposition3':
+          return { ...state, lposition3: action.payload || state.lposition3 };
+        case 'lrank':
+          return { ...state, lrank: action.payload || state.lrank };
+        case 'position2':
+          return { ...state, position: action.payload || state.position };
+        case 'branch':
+          return { ...state, branch: action.payload || state.branch };
+        case 'user':
+          return { ...state, user: action.payload || state.user };
+        case 'callCenter':
+          return { ...state, callCenter: action.payload || state.callCenter };
+        case 'organization':
+          return { ...state, organizationList: action.payload || state.organizationList };
+        case 'wcallcenter':
+          return { ...state, wcallcenterList: action.payload || state.wcallcenterList };
+        case 'section':
+          return { ...state, sectionList: action.payload || state.sectionList };
+        case 'unit':
+          return { ...state, unitList: action.payload || state.unitList };
+        case 'team':
+          return { ...state, teamList: action.payload || state.teamList };
+
+        case 'zOrganization':
+          return { ...state, zOrganization: action.payload || state.zOrganization };
+        case 'zBranchCity':
+          return { ...state, zBranchCity: action.payload || state.zBranchCity };
+        case 'zSourceType':
+          return { ...state, zSourceType: action.payload || state.zSourceType };
+        case 'zSource':
+          return { ...state, zSource: action.payload || state.zSource };
+        case 'zRecruitmentPosition':
+          return { ...state, zRecruitmentPosition: action.payload || state.zRecruitmentPosition };
+        case 'zRecruitmentRank':
+          return { ...state, zRecruitmentRank: action.payload || state.zRecruitmentRank };
+        case 'jobLevel':
+          return { ...state, jobLevel: action.payload || state.jobLevel };
+        case 'job':
+          return { ...state, job: action.payload || state.job };
+        case 'showJobLevel':
+          return { ...state, showJobLevel: action.payload || state.showJobLevel };
+        case 'code':
+          return { ...state, code: action.payload || state.code };
+        case 'showOrgName':
+          return { ...state, showOrgName: action.payload || state.showOrgName };
+        case 'allJobLevel':
+          return { ...state, allJobLevel: action.payload || state.allJobLevel };
+        case 'zNativePlace':
+          return { ...state, zNativePlace: action.payload || state.zNativePlace };
+        case 'zNationality':
+          return { ...state, zNationality: action.payload || state.zNationality };
+        case 'zPosition':
+          return { ...state, zPosition: action.payload || state.zPosition };
+        case 'zRank':
+          return { ...state, zRank: action.payload || state.zRank };
+        case 'zRank2':
+          return { ...state, zRank2: action.payload || state.zRank2 };
+
+        case 'hOrg':
+          return { ...state, hOrg: action.payload || state.hOrg };
+
+        case 'zProvince':
+          return { ...state, zProvince: action.payload || state.zProvince };
+        case 'zHouseholdRegister':
+          return { ...state, zHouseholdRegister: action.payload || state.zHouseholdRegister };
+        case 'position':
+          return { ...state, positionList: action.payload || state.positionList };
+        case 'wrank':
+          return { ...state, wrankList: action.payload || state.wrankList };
+        case 'hBranchLevel':
+          return { ...state, hBranchLevel: action.payload || state.hBranchLevel };
+        case 'lpcode':
+          return { ...state, lpcode: action.payload || state.lpcode };
+        case 'lptitle':
+          return { ...state, lptitle: action.payload || state.lptitle };
+        case 'rankcode':
+          return { ...state, rankcode: action.payload || state.rankcode };
+        case 'branchlevel':
+          return { ...state, branchlevel: action.payload || state.branchlevel };
+        case 'agentgrade':
+          return { ...state, agentgradeList: action.payload || state.agentgradeList };
+        case 'hBranchType':
+          return { ...state, hBranchType: action.payload || state.hBranchType };
+        case 'hAdjustType':
+          return { ...state, hAdjustType: action.payload || state.hAdjustType };
+        case 'hStatFlag':
+          return { ...state, hStatFlag: action.payload || state.hStatFlag };
+        case 'hStatus':
+          return { ...state, hStatus: action.payload || state.hStatus };
+        case 'pauseType':
+          return { ...state, pauseTypeList: action.payload || state.pauseTypeList };
+        case 'agentgradenew3':
+          return { ...state, agentgradenewList: action.payload || state.agentgradenewList };
+        case 'departRsn':
+          return { ...state, departRsnList: action.payload || state.departRsnList };
+        case 'salaryItem':
+          return { ...state, salaryItem: action.payload || state.salaryItem };
+        case 'subjectCode':
+          return { ...state, subjectCode: action.payload || state.subjectCode };
+        case 'businessType1':
+          return { ...state, businessType1: action.payload || state.businessType1 };
+        case 'peopleTypeInfo':
+          return { ...state, peopleTypeInfo: action.payload || state.peopleTypeInfo };
+        case 'gradeSeries':
+          return { ...state, gradeSeries: action.payload || state.gradeSeries };
+        case 'polAuditState':
+          return { ...state, polAuditState: action.payload || state.polAuditState };
+        case 'checkFlag':
+          return { ...state, checkFlag: action.payload || state.checkFlag };
+        case 'subjectCodeRelation':
+          return { ...state, subjectCodeRelation: action.payload || state.subjectCodeRelation };
+        case 'hAgentGrade':
+          return { ...state, hAgentGrade: action.payload || state.hAgentGrade };
+        case 'polstate2':
+          return { ...state, polState2List: action.payload || state.polState2List };
+        case 'agentgradenew':
+          return { ...state, agentgradenewList2: action.payload || state.agentgradenewList2 };
+        case 'AgentTitle':
+          return { ...state, AgentTitleList2: action.payload || state.AgentTitleList2 };
+        case 'addpeonew':
+          return { ...state, addpeonewList2: action.payload || state.addpeonewList2 };
+        case 'integrationflag':
+          return { ...state, integrationflagList2: action.payload || state.integrationflagList2 };
+        case 'agenttype':
+          return { ...state, agenttypeList2: action.payload || state.agenttypeList2 };
+        case 'hOfferType':
+          return { ...state, hOfferType: action.payload || state.hOfferType };
+        case 'PreAnnualBonusRate':
+          return { ...state, PreAnnualBonusRate: action.payload || state.PreAnnualBonusRate };
+        case 'agxcomtype':
+          return { ...state, agxcomtype: action.payload || state.agxcomtype };
+        case 'MultiselectManageCom':
+          return { ...state, MultiselectManageCom: action.payload || state.MultiselectManageCom };
+        case 'entryNo':
+          return { ...state, entryNo: action.payload || state.entryNo };
+        case 'dayReportType':
+          return { ...state, dayReportType: action.payload || state.dayReportType };
+        case 'staffType':
+          return { ...state, staffTypeList: action.payload || state.staffTypeList };
+        case 'district':
+          return { ...state, districtList: action.payload || state.districtList };
+        case 'monthCount':
+          return { ...state, monthCount: action.payload || state.monthCount };
+        case 'packageoptype':
+          return { ...state, packageOpType: action.payload || state.packageOpType };
+        case 'laday_reporttype':
+          return { ...state, laDayReportType: action.payload || state.laDayReportType };
+        case 'hReportType':
+          return { ...state, hReportType: action.payload || state.hReportType };
+        case 'branchLevel':
+          return { ...state, branchLevel: action.payload || state.branchLevel };
+        case 'SubRiskCode':
+          return { ...state, SubRiskCode: action.payload || state.SubRiskCode };
+        case 'agentGradeNew':
+          return { ...state, agentGradeNew: action.payload || state.agentGradeNew };
+        case 'assessState':
+          return { ...state, assessState: action.payload || state.assessState };
+        case 'yesOrNo1':
+          return { ...state, yesOrNo1: action.payload || state.yesOrNo1 };
+        case 'zBranchCity2':
+          return { ...state, zBranchCity2: action.payload || state.zBranchCity2 };
+        case 'lorganization':
+          return { ...state, lorganization: action.payload || state.lorganization };
+        case 'localmonth':
+          return { ...state, localmonth: action.payload || state.localmonth };
+        case 'manageCom2':
+          return { ...state, manageCom2: action.payload || state.manageCom2 };
+        case 'branchComCode':
+          return { ...state, branchComCode: action.payload || state.branchComCode };
+        case 'bankasspritype':
+          return { ...state, bankasspritype: action.payload || state.bankasspritype };
+        // bankagency
+        case 'bankagency':
+          return { ...state, bankagency: action.payload || state.bankagency };
+        // indirectKind
+        case 'indirectKind':
+          return { ...state, indirectKind: action.payload || state.indirectKind };
+        case 'indirectKind3':
+          return { ...state, indirectKind3: action.payload || state.indirectKind3 };
+        case 'grpNature':
+          return { ...state, grpNature: action.payload || state.grpNature };
+        case 'channelType':
+          return { ...state, channelType: action.payload || state.channelType };
+        case 'areaType':
+          return { ...state, areaType: action.payload || state.areaType };
+        case 'bankType':
+          return { ...state, bankType: action.payload || state.bankType };
+        case 'businessType':
+          return { ...state, businessType: action.payload || state.businessType };
+        case 'BXSBankCode':
+          return { ...state, BXSBankCode: action.payload || state.BXSBankCode };
+        case 'bankcodeBXS':
+          return { ...state, bankCodeList: action.payload || state.bankCodeList };
+        case 'riskCodeBXS':
+          return { ...state, riskCodeBXS: action.payload || state.riskCodeBXS };
+        case 'riskCode3BXS':
+          return { ...state, riskCode3BXS: action.payload || state.riskCode3BXS };
+        // wageResult
+        case 'wageResult':
+          return { ...state, wageResult: action.payload || state.wageResult };
+        // bankagenttype
+        case 'bankAgentType':
+          return { ...state, bankAgentType: action.payload || state.bankAgentType };
+        case 'comCode':
+          return { ...state, comCode: action.payload || state.comCode };
+        case 'bankPolType':
+          return { ...state, bankPolType: action.payload || state.bankPolType };
+        default:
+          return { ...state };
+      }
+    },
+~~~
+
+state里将数据库字段值转化为相对的中文名称：
+
+~~~codeselect.js
+state: {
+    // 是否数据
+    yesOrNo: [
+      { codeValue: 'Y', codeName: '是' },
+      { codeValue: 'N', codeName: '否' },
+    ],
+
+    isNotIs: [
+      { codeValue: '1', codeName: '是' },
+      { codeValue: '0', codeName: '否' },
+    ],
+
+    // 费用类型
+    feeType: [],
+
+    // 疑似重复数据放行数据来源
+    commisionInfoDataSource: [
+      { codeValue: 'la', codeName: 'LA' },
+      { codeValue: 'ebs', codeName: 'EBS' },
+      { codeValue: 'pp', codeName: '盘片' },
+    ],
+
+    // 费用类型（前台做对应了，不需要过后台了，和feeType略有差别）
+    chargeType: [
+      { codeValue: '01', codeName: '手续费' },
+      { codeValue: '02', codeName: '技术服务费' },
+      { codeValue: '03', codeName: '补充手续费' },
+      { codeValue: '04', codeName: '按单手续费' },
+    ],
+    
+	// 发票类型
+    invoType: [
+      { codeValue: '01', codeName: '普通发票' },
+      { codeValue: '02', codeName: '专用发票' },
+    ],
+    
+    // 状态
+    state: [
+      { codeValue: '01', codeName: '已关联' },
+      { codeValue: '02', codeName: '未关联' },
+      { codeValue: '03', codeName: '部分关联' },
+    ],
+    
+    // 合作机构
+    agentComData: [],
+},
+    
+~~~
+
+selectOption之前是写死的，现在是遍历map，获取值填充
+
+~~~queryAdvance.js
+{codeselect.agentComData.map(item => (
+   <Select.Option key={item.codeValue}>
+       {item.codeValue}-{item.codeName}
+   </Select.Option>
+))}
+~~~
+
+根据路径'/api/code-defines/codequery'，找到后端：
+
+resource层：
+
+```CodeDefineResource.java
+/**
+ * 通用查询码表的接口
+ * @param map 必须包含key：codetype（哪种编码类型）其他key根据不同的codetype自行维护
+ * */
+@PostMapping("/code-defines/codequery")
+@Timed
+public ResponseEntity<List<CodeDefineDTO>> getCodeDefinesByCodetype(@RequestBody Map<String, String> map) {
+    String codetype = map.get("codeType");
+    log.debug("REST request to get getCodeDefsByCodetype:{}",codetype);
+    if (codetype == null || "".equals(codetype)) {
+        throw new BadRequestAlertException("Invalid codetype", ENTITY_NAME, "codetype is null");
+    }
+    List<CodeDefineDTO> codedeflist = codeDefineQueryService.getCodeDefinesByCodeType(map);
+    log.debug("REST reponse to get getCodeDefsByCodetype:{}", codedeflist);
+    return ResponseEntity.ok().body(codedeflist);
+}
+```
+
+service层：
+
+```
+public List<CodeDefineDTO> getCodeDefinesByCodeType(Map<String, String> map) {
+        String codeType = map.get("codeType");
+        String scence = map.get("scence"); // 合作机构审核下拉，获取标志位
+        // 代码整合版本 20200331
+        String id = map.get("id");//职级名称
+        String jobId = map.get("jobId");
+        String orgCode = map.get("orgCode");
+        List<CodeDefineDTO> codeDefineList = new ArrayList<>();
+
+        // 获取渠道，qy新添加该字段，这个方法太拥挤了，AGY与BXS换个地方写   2019-12-10
+        String channel = map.get("channel");
+        if (channel !=null && "AGY".equals(channel.toUpperCase())){
+            codeDefineList = ldCodeQueryService.getAGYCodeDefinesByCodeType(map);
+            return codeDefineList;
+        }
+        if (channel !=null && "BXS".equals(channel.toUpperCase())){
+            codeDefineList = ldCodeQueryService.getBXSCodeDefinesByCodeType(map);
+            return codeDefineList;
+        }
+
+        try{
+            CodeDefineDTO codeDefineDTO = null;
+
+            //根据所有职级
+            if ("horg".equals(codeType.toLowerCase())) {
+                List<ResultCommitSelectDTO> dtos = resultCommitService.queryBranch();
+                for (int j = 0; j < dtos.size(); j++) {
+                    codeDefineDTO = new CodeDefineDTO();
+                    ResultCommitSelectDTO commit = dtos.get(j);
+                    codeDefineDTO.setCodeType(codeType);
+                    codeDefineDTO.setCodeValue(commit.getCode());
+                    codeDefineDTO.setCodeName(commit.getOrgName());
+                    codeDefineList.add(codeDefineDTO);
+                }
+                return codeDefineList;
+            }
+            
+              //初始化下拉机构代码
+            if ("code".equals(codeType.toLowerCase())) {
+                List<OrgCodeDTO> dtos = resultQueryService.queryOrgCode();
+                for (int j = 0; j < dtos.size(); j++) {
+                    codeDefineDTO = new CodeDefineDTO();
+                    OrgCodeDTO resultQueryModifyDTO = dtos.get(j);
+                    codeDefineDTO.setCodeType(codeType);
+                    codeDefineDTO.setCodeValue(resultQueryModifyDTO.getCode());
+                    codeDefineList.add(codeDefineDTO);
+                }
+                return codeDefineList;
+            }catch(Exception e){
+            	e.getStackTrace();
+        	}
+
+        return codeDefineList;
+}
+        
+        
+        
+        
+        
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
