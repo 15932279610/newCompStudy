@@ -1610,15 +1610,15 @@ service层：
 
 可以在浏览器上查看到请求路径：
 
-![image-20201029100208578](D:\sinosoft\1、NEWCOMP新人培训期相关资料\培训笔记\newCompStudy\static\picture\image-20201029100208578.png)
+![image-20201029100208578](static/picture/image-20201029100208578.png)
 
 点进去看response，可以看到响应的数据：
 
-![image-20201029100736920](D:\sinosoft\1、NEWCOMP新人培训期相关资料\培训笔记\newCompStudy\static\picture\image-20201029100736920.png)
+![image-20201029100736920](static/picture/image-20201029100736920.png)
 
 要做的效果：
 
-![image-20201029103601848](D:\sinosoft\1、NEWCOMP新人培训期相关资料\培训笔记\newCompStudy\static\picture\image-20201029103601848.png)
+![image-20201029103601848](static/picture/image-20201029103601848.png)
 
 前端：
 
@@ -1643,7 +1643,7 @@ componentDidMount() {
 
 在models文件夹下的codeselect.js可以找到codeQuery方法
 
-![image-20201029100949419](D:\sinosoft\1、NEWCOMP新人培训期相关资料\培训笔记\newCompStudy\static\picture\image-20201029100949419.png)
+![image-20201029100949419](static/picture/image-20201029100949419.png)
 
 在renders方法里实现了codequerycallback()方法：
 
